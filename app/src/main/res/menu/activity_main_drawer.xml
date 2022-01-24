@@ -7,11 +7,11 @@
 
         <item
             android:id="@+id/nav_unlock"
-            android:title="Subscription" />
+            android:title="Go Premium" />
 
         <item
-            android:id="@+id/nav_helpus"
-            android:title="Help us to improve" />
+            android:id="@+id/nav_feedback"
+            android:title="Feedback" />
         <item
             android:id="@+id/nav_rate"
             android:title="Rate us" />

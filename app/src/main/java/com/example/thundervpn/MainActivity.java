@@ -3,6 +3,7 @@ package com.example.thundervpn;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -33,12 +34,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(MainActivity.this);
-
-        binding.mycontentview.text2.setText("sdd");
+        binding.mycontentview.btnNavigation.setOnClickListener(view -> binding.drawerLayout.openDrawer(GravityCompat.START));
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull @org.jetbrains.annotations.NotNull MenuItem item) {
-        return false;
+        binding.drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
