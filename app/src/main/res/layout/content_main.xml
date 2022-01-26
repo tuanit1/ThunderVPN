@@ -65,6 +65,7 @@
                 android:text="Status:"
                 android:textSize="20dp"/>
             <TextView
+                android:id="@+id/tv_status"
                 android:layout_marginLeft="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -252,28 +253,44 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@drawable/toggle_button">
 
-            <TextView
-                android:id="@+id/tv_toggle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="START"
-                android:textColor="#2A6759"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_toggle"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_margin="50dp"
+                app:cardCornerRadius="200dp"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:layout_centerInParent="true">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/tv_toggle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="START"
+                        android:textColor="#2A6759"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_above="@+id/tv_toggle"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="5dp"
-                android:src="@drawable/power_button" />
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_above="@+id/tv_toggle"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="5dp"
+                        android:src="@drawable/power_button" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+
 
         </RelativeLayout>
     </RelativeLayout>
