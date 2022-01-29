@@ -15,7 +15,7 @@ public class SharedPref {
     private Context context;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    private static String TAG_CURRENT_PROXY = "current_proxy";
+    private static String CURRENT_COUNTRY = "current_country";
     private static String IS_REMEMBER = "is_remember";
     private static String LOGIN_EMAIL = "login_email";
     private static String LOGIN_PASSWORD = "login_password";
@@ -25,6 +25,15 @@ public class SharedPref {
         this.context = context;
         this.sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
         this.editor = sharedPreferences.edit();
+    }
+
+    public int getCurrentCountry(){
+        return sharedPreferences.getInt(CURRENT_COUNTRY, 0);
+    }
+
+    public void setCurrentCountry(int id){
+        editor.putInt(CURRENT_COUNTRY, id);
+        editor.apply();
     }
 
     public Boolean getIsAutoLogin() {

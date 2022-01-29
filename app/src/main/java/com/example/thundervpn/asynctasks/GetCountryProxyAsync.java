@@ -30,7 +30,7 @@ public class GetCountryProxyAsync extends AsyncTask<Void, String, Boolean> {
     private RequestBody requestBody;
     private GetCountryProxyListener listener;
     private Country country;
-    private ArrayList<MyProxy> arrayList_proxy;
+    private ArrayList<MyProxy> arrayList_proxy = new ArrayList<>();
     private Methods methods;
 
     public GetCountryProxyAsync(Methods methods, RequestBody requestBody, GetCountryProxyListener listener) {
@@ -70,7 +70,7 @@ public class GetCountryProxyAsync extends AsyncTask<Void, String, Boolean> {
                 int port = Integer.parseInt(methods.base64Decode(obj.getString("port")));
                 String username = methods.base64Decode(obj.getString("username"));
                 String password = methods.base64Decode(obj.getString("password"));
-                int country_id = obj_country.getInt("country_id");
+                int country_id = obj.getInt("country_id");
 
                 arrayList_proxy.add(new MyProxy(id, host, port, username, password, country_id));
             }

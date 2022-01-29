@@ -58,14 +58,6 @@ public class ProxyConfig {
         return (ip & ProxyConfig.FAKE_NETWORK_MASK) == ProxyConfig.FAKE_NETWORK_IP;
     }
 
-    public static void setHttpProxyServer(Context ctx, String proxyHost, int proxyPort, String username, String password) {
-        ctx.getSharedPreferences("current_proxy", Context.MODE_PRIVATE).edit()
-                .putString("host", proxyHost)
-                .putInt("port", proxyPort)
-                .putString("username", username)
-                .putString("password", password)
-                .apply();
-    }
 
     public void setProxy(String proxyHost, int proxyPort, String username, String password) {
         Config config = HttpConnectConfig.parse(proxyHost, proxyPort, username, password);

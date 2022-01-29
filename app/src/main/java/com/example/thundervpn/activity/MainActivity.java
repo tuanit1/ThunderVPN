@@ -8,10 +8,14 @@ import androidx.core.view.GravityCompat;
 import android.content.Intent;
 import android.net.VpnService;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.thundervpn.utils.SharedPref;
+import com.squareup.picasso.Picasso;
 import com.example.thundervpn.R;
 import com.example.thundervpn.asynctasks.GetAllCountryAsync;
 import com.example.thundervpn.asynctasks.GetCountryProxyAsync;
@@ -29,6 +33,7 @@ import com.example.thundervpn.utils.Methods;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
                 LocalVpnService.onStatusChangedListener{
@@ -36,8 +41,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActivityMainBinding binding;
     private boolean toggle_state = false;
     private Methods methods;
+    private SharedPref sharedPref;
     private ArrayList<Country> mCountries;
     public static final int REQUEST_PROXY = 1;
+    private int CURRENT_COUNTRY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(view);
 
         methods = new Methods(this);
+        sharedPref = new SharedPref(this);
         mCountries = new ArrayList<>();
 
         setupDrawer();
@@ -55,10 +63,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setupMoreCountryButton();
 
-        //String text = "http://namlanvy:namlanvy@23.229.109.154:6180";
+        setLastCountry();
 
-        ProxyConfig.Instance.setProxy("23.229.109.154", 6180, "namlanvy", "namlanvy");
-        ProxyConfig.setHttpProxyServer(MainActivity.this, "23.229.109.154", 6180, "namlanvy", "namlanvy");
         LocalVpnService.addOnStatusChangedListener(this);
     }
 
@@ -70,12 +76,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 MyBottomSheetFragments myBottomSheetFragments = new MyBottomSheetFragments(new ItemCountryClickListener() {
                     @Override
                     public void onClick(int id) {
-                        if(id == 0){
-                            //default
 
-                        }else{
-                            GetProxy(id);
-                        }
+                        CURRENT_COUNTRY = id;
+
+                        SetProxy(true);
                     }
                 });
 
@@ -85,40 +89,93 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void GetProxy(int country_id) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("id", country_id);
+    private void SetProxy(boolean isToggle) {
+        if(CURRENT_COUNTRY == 0){
+            if(methods.isNetworkConnected()){
+                MyProxy proxy = methods.getDefaultProxy();
+                ProxyConfig.Instance.setProxy(proxy.getHost(), proxy.getPort(), proxy.getUsername(), proxy.getPassword());
+                sharedPref.setCurrentCountry(0);
+                Log.e("VPN", "Change to: " + proxy.getHost() + ":" + proxy.getPort());
 
-        GetCountryProxyAsync async = new GetCountryProxyAsync(methods, methods.getRequestBody("method_get_proxy", bundle), new GetCountryProxyListener() {
-            @Override
-            public void onStart() {
+                Picasso.get()
+                        .load(R.drawable.global)
+                        .error(R.drawable.global)
+                        .into(binding.mycontentview.ivCountry);
 
-            }
+                binding.mycontentview.tvCountry.setText("Default");
 
-            @Override
-            public void onEnd(boolean status, Country country, ArrayList<MyProxy> arrayList_proxy) {
-                if(methods.isNetworkConnected()){
-                    if(status){
-                        if(arrayList_proxy.isEmpty()){
-                            //get random proxy in list
-                            int ran_index = (int)(Math.random() * arrayList_proxy.size());
-                            MyProxy proxy = arrayList_proxy.get(ran_index);
-                            ProxyConfig.Instance.setProxy(proxy.getHost(), proxy.getPort(), proxy.getUsername(), proxy.getPassword());
-                        }else {
-                            MyProxy proxy = methods.getDefaultProxy();
-                            ProxyConfig.Instance.setProxy(proxy.getHost(), proxy.getPort(), proxy.getUsername(), proxy.getPassword());
-                        }
-
-                    }else{
-                        Toast.makeText(MainActivity.this, Constant.ERROR_MSG, Toast.LENGTH_SHORT).show();
-                    }
+                if(!LocalVpnService.IsRunning){
+                    binding.mycontentview.tvStatus.setText("CONNECTING...");
+                    startVpn();
                 }else{
-                    Toast.makeText(MainActivity.this, Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
+                    switchCountryText();
                 }
-            }
-        });
 
-        async.execute();
+            }else{
+                Toast.makeText(MainActivity.this, Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", CURRENT_COUNTRY);
+
+            GetCountryProxyAsync async = new GetCountryProxyAsync(methods, methods.getRequestBody("method_get_proxy", bundle), new GetCountryProxyListener() {
+                @Override
+                public void onStart() {
+
+                }
+
+                @Override
+                public void onEnd(boolean status, Country country, ArrayList<MyProxy> arrayList_proxy) {
+                    if(methods.isNetworkConnected()){
+                        if(status){
+                            if(!arrayList_proxy.isEmpty()){
+                                //get random proxy in list
+                                int ran_index = (int)(Math.random() * arrayList_proxy.size());
+                                MyProxy proxy = arrayList_proxy.get(ran_index);
+                                ProxyConfig.Instance.setProxy(proxy.getHost(), proxy.getPort(), proxy.getUsername(), proxy.getPassword());
+                                sharedPref.setCurrentCountry(country.getId());
+                                Log.e("VPN", "Change to: " + proxy.getHost() + ":" + proxy.getPort());
+                            }else {
+                                MyProxy proxy = methods.getDefaultProxy();
+                                ProxyConfig.Instance.setProxy(proxy.getHost(), proxy.getPort(), proxy.getUsername(), proxy.getPassword());
+                                sharedPref.setCurrentCountry(0);
+                                Log.e("VPN", "Change to: " + proxy.getHost() + ":" + proxy.getPort());
+                            }
+
+                            Picasso.get()
+                                    .load(country.getThumb())
+                                    .error(R.drawable.global)
+                                    .into(binding.mycontentview.ivCountry);
+
+                            binding.mycontentview.tvCountry.setText(country.getName());
+
+                            if(isToggle){
+                                if(!LocalVpnService.IsRunning){
+                                    binding.mycontentview.tvStatus.setText("CONNECTING...");
+                                    startVpn();
+                                }else{
+                                    switchCountryText();
+                                }
+                            }
+
+
+                        }else{
+                            Toast.makeText(MainActivity.this, Constant.ERROR_MSG, Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(MainActivity.this, Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            async.execute();
+        }
+    }
+
+    private void setLastCountry(){
+        CURRENT_COUNTRY = sharedPref.getCurrentCountry();
+
+        SetProxy(false);
     }
 
     private void setupToggleButton() {
@@ -140,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
                 if(!toggle_state){
                     if(methods.isNetworkConnected()){
+                        binding.mycontentview.tvStatus.setText("CONNECTING...");
                         startVpn();
                     }else{
                         Toast.makeText(getApplicationContext(), Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
@@ -150,6 +208,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
+    }
+
+    private void switchCountryText(){
+        binding.mycontentview.tvStatus.setText("SWITCHING...");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                binding.mycontentview.tvStatus.setText("CONNECTED");
+            }
+        },700);
     }
 
     private void setupDrawer() {
@@ -226,17 +294,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             toggle_state = false;
         }
     }
-
-    public void reRunVpn(){
-        if(LocalVpnService.IsRunning){
-            LocalVpnService.IsRunning = false;
-
-            //new Runnable()
-        }else{
-            startVpn();
-        }
-    }
-
 
     @Override
     public void onLogReceived(String logString) {

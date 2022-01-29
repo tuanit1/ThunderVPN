@@ -56,7 +56,7 @@
 
         <LinearLayout
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="40dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -154,11 +154,12 @@
                 android:background="@color/main_color">
 
                 <com.makeramen.roundedimageview.RoundedImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:id="@+id/iv_country"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
                     android:layout_centerInParent="true"
                     android:src="@drawable/global"
-                    app:riv_border_color="@color/white"
+                    app:riv_border_color="#2E302F"
                     app:riv_border_width="1dp"
                     app:riv_corner_radius="90dp" />
             </RelativeLayout>
@@ -171,14 +172,15 @@
                 android:background="@color/main_color">
 
                 <TextView
+                    android:id="@+id/tv_country"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="DEFAULT COUNTRY"
+                    android:text="Default"
                     android:textColor="@color/white"
-                    android:textSize="20dp"
+                    android:textSize="25dp"
                     android:textStyle="bold" />
 
             </RelativeLayout>
