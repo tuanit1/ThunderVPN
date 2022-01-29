@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /**
+  ~  * Created by tuan on 1/28/22, 9:25 PM
+  ~  * Copyright (c) 2022 . All rights reserved.
+  ~  * Last modified 1/28/22, 9:25 PM
+  ~  */
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_bg"
+    tools:context=".activity.SplashActivity">
+
+    <LinearLayout
+        android:layout_above="@+id/center_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_thunder"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thunder VPN"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="40dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="your simple private Mjölnir"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="18dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/center_point"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal" />
+
+    <ProgressBar
+        android:id="@+id/progressBar_home"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/white"
+        android:indeterminateTintMode="src_atop"
+        android:visibility="visible" />
+
+</RelativeLayout>

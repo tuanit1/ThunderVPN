@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2022.
+  ~  /**
+  ~ * Created by DoThanhTuan-LuuYenNhi-LeThiThuHuong on 1/9/22, 7:29 PM
+  ~ * Copyright (c) 2022 . All rights reserved.
+  ~ * Last modified 1/9/22, 7:29 PM
+  ~ */
+  -->
+
+<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+    <androidx.cardview.widget.CardView
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
+        app:cardBackgroundColor="@color/main_color">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerInParent="true"
+                android:indeterminate="true"
+                android:indeterminateTintMode="src_atop"
+                android:indeterminateTint="@color/white"
+                android:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/tv_msg"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="msasdasdassadasddasdasdasdasg"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textAlignment="center"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>
+

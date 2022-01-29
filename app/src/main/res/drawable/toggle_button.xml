@@ -3,10 +3,13 @@
     android:shape="ring"
     android:thickness="22dp"
     android:useLevel="false">
+<!--    <solid-->
+<!--        android:color="@color/main_color"/>-->
     <gradient
-        android:angle="225"
+        android:angle="15"
         android:useLevel="false"
         android:startColor="@color/main_color"
+        android:centerColor="@color/main_color"
         android:endColor="@color/second_color"
         android:type="linear"/>
 </shape>

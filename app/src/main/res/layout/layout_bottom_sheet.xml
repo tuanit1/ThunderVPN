@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ /**
+  ~  * Created by tuan on 1/27/22, 1:32 AM
+  ~  * Copyright (c) 2022 . All rights reserved.
+  ~  * Last modified 1/27/22, 1:32 AM
+  ~  */
+  -->
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose country"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:textColor="@color/text_color"
+            android:padding="15dp"
+            android:layout_gravity="center_horizontal"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/text_color"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/ll_main"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    app:cardBackgroundColor="@color/light_green"
+                    app:cardCornerRadius="15dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/ic_search" />
+
+                        <EditText
+                            android:id="@+id/edt_search"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@android:color/transparent"
+                            android:hint="Search country..."
+                            android:textColorHint="@color/text_color"
+                            android:textSize="20dp" />
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_country"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="30dp"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rl_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="30dp"
+                    android:text="Something went wrong! PLease try again!"
+                    android:textAlignment="center"
+                    android:textColor="@color/text_color"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="30dp"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/main_color"
+                android:indeterminateTintMode="src_atop"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

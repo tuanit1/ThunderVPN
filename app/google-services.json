@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "564517393460",
+    "project_id": "thundervpn-c3ecb",
+    "storage_bucket": "thundervpn-c3ecb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564517393460:android:adc6d76f2e383fb470a661",
+        "android_client_info": {
+          "package_name": "com.example.thundervpn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564517393460-s9pmkds058fe9udpdbepfol9i1v43v3r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXQEsrpWBhvM95i4Q5tZMNa1j1wBtRmqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "564517393460-s9pmkds058fe9udpdbepfol9i1v43v3r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

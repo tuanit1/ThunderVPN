@@ -6,18 +6,27 @@
     <group android:checkableBehavior="single">
 
         <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_nav_account"
+            android:title="My Account" />
+
+        <item
             android:id="@+id/nav_unlock"
+            android:icon="@drawable/ic_nav_crown"
             android:title="Go Premium" />
 
         <item
             android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_nav_feedback"
             android:title="Feedback" />
         <item
             android:id="@+id/nav_rate"
+            android:icon="@drawable/ic_nav_like"
             android:title="Rate us" />
 
         <item
             android:id="@+id/nav_policy"
+            android:icon="@drawable/ic_nav_privacy"
             android:title="Privacy Policy" />
 
     </group>
