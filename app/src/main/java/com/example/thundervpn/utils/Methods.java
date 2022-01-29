@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Base64;
 
+import com.example.thundervpn.items.MyProxy;
 import com.google.gson.JsonObject;
 
 import java.io.File;
@@ -43,6 +44,10 @@ public class Methods {
     public String base64Decode(String input) throws UnsupportedEncodingException {
         byte[] encodeValue = Base64.decode(input, Base64.DEFAULT);
         return new String(encodeValue, "UTF-8");
+    }
+
+    public MyProxy getDefaultProxy(){
+        return new MyProxy(0, Constant.DEFAULT_HOST, Constant.DEFAULT_PORT, Constant.DEFAULT_USNAME, Constant.DEFAULT_PSSWRD, 0);
     }
 
     public boolean checkForEncode(String string) {

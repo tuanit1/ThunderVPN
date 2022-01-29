@@ -54,10 +54,20 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Country country = mCountries.get(position);
         holder.tv_name.setText(country.getName());
-        Picasso.get()
-                .load(country.getThumb())
-                .error(R.drawable.global)
-                .into(holder.iv_image);
+
+        if(country.getId() == 0){
+            Picasso.get()
+                    .load(R.drawable.global)
+                    .error(R.drawable.global)
+                    .into(holder.iv_image);
+        }else {
+            Picasso.get()
+                    .load(country.getThumb())
+                    .error(R.drawable.global)
+                    .into(holder.iv_image);
+        }
+
+
 
         if(country.isPremium()){
             holder.iv_premium.setVisibility(View.VISIBLE);

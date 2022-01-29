@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public void onClick(int id) {
                         if(id == 0){
                             //default
+
                         }else{
                             GetProxy(id);
                         }
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Bundle bundle = new Bundle();
         bundle.putInt("id", country_id);
 
-        GetCountryProxyAsync async = new GetCountryProxyAsync(methods.getRequestBody("method_get_proxy", bundle), new GetCountryProxyListener() {
+        GetCountryProxyAsync async = new GetCountryProxyAsync(methods, methods.getRequestBody("method_get_proxy", bundle), new GetCountryProxyListener() {
             @Override
             public void onStart() {
 
@@ -96,9 +97,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onEnd(boolean status, Country country, ArrayList<MyProxy> arrayList_proxy) {
+                if(methods.isNetworkConnected()){
+                    if(status){
+                        if(arrayList_proxy.isEmpty()){
+                            //get random proxy in list
+                            int ran_index = (int)(Math.random() * arrayList_proxy.size());
+                            MyProxy proxy = arrayList_proxy.get(ran_index);
+                            ProxyConfig.Instance.setProxy(proxy.getHost(), proxy.getPort(), proxy.getUsername(), proxy.getPassword());
+                        }else {
+                            MyProxy proxy = methods.getDefaultProxy();
+                            ProxyConfig.Instance.setProxy(proxy.getHost(), proxy.getPort(), proxy.getUsername(), proxy.getPassword());
+                        }
 
+                    }else{
+                        Toast.makeText(MainActivity.this, Constant.ERROR_MSG, Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(MainActivity.this, Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
+        async.execute();
     }
 
     private void setupToggleButton() {
@@ -206,6 +226,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             toggle_state = false;
         }
     }
+
+    public void reRunVpn(){
+        if(LocalVpnService.IsRunning){
+            LocalVpnService.IsRunning = false;
+
+            //new Runnable()
+        }else{
+            startVpn();
+        }
+    }
+
 
     @Override
     public void onLogReceived(String logString) {
