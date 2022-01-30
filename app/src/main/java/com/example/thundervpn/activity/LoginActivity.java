@@ -86,6 +86,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        binding.tvForgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
+            }
+        });
+
         //SIGN UP LAYOUT
         bottomSheetBehavior = BottomSheetBehavior.from(binding.signup.bottomSignupLayout);
 

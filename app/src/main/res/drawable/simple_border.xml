@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ /**
+  ~  * Created by ACER on 1/30/22, 11:11 PM
+  ~  * Copyright (c) 2022 . All rights reserved.
+  ~  * Last modified 1/30/22, 11:11 PM
+  ~  */
+  -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <solid
+        android:color="@color/white"/>
+
+    <stroke
+        android:color="@color/text_color"
+        android:width="3dp"/>
+    <corners
+        android:topLeftRadius="15dp"
+        android:topRightRadius="15dp"
+        android:bottomLeftRadius="15dp"
+        android:bottomRightRadius="15dp"/>
+</shape>

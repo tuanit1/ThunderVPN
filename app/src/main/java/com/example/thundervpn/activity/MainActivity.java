@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.thundervpn.items.MyUser;
 import com.example.thundervpn.utils.SharedPref;
 import com.squareup.picasso.Picasso;
 import com.example.thundervpn.R;

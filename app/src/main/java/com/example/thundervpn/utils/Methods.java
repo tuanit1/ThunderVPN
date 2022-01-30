@@ -38,12 +38,12 @@ public class Methods {
 
     public String base64Encode(String input){
         byte[] encodeValue = Base64.encode(input.getBytes(), Base64.DEFAULT);
-        return new String(encodeValue);
+        return (new String(encodeValue)).trim();
     }
 
     public String base64Decode(String input) throws UnsupportedEncodingException {
         byte[] encodeValue = Base64.decode(input, Base64.DEFAULT);
-        return new String(encodeValue, "UTF-8");
+        return (new String(encodeValue, "UTF-8")).trim();
     }
 
     public MyProxy getDefaultProxy(){
@@ -71,6 +71,14 @@ public class Methods {
 
             case "method_get_proxy":
                 postObj.addProperty("id", bundle.getInt("id"));
+                break;
+
+            case "method_get_user":
+                postObj.addProperty("uid", base64Encode(bundle.getString("uid")));
+                break;
+            case "method_change_name":
+                postObj.addProperty("name", base64Encode(bundle.getString("name")));
+                postObj.addProperty("uid", base64Encode(bundle.getString("uid")));
                 break;
         }
 

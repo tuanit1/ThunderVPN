@@ -6,7 +6,7 @@
 <!--    <solid-->
 <!--        android:color="@color/main_color"/>-->
     <gradient
-        android:angle="15"
+        android:angle="270"
         android:useLevel="false"
         android:startColor="@color/main_color"
         android:centerColor="@color/main_color"

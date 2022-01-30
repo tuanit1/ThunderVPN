@@ -14,6 +14,12 @@
         android:theme="@style/Theme.ThunderVPN"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.MyAccountActivity"
             android:exported="false" />
         <activity

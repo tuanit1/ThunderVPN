@@ -19,6 +19,7 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
+            android:id="@+id/top"
             android:layout_width="350dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="25dp"
@@ -85,6 +86,8 @@
 
 
         <LinearLayout
+            android:layout_below="@id/top"
+            android:id="@+id/bot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -92,8 +95,10 @@
             android:padding="5dp">
 
             <ImageView
-                android:layout_width="350dp"
-                android:layout_height="250dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxHeight="250dp"
+                android:adjustViewBounds="true"
                 android:layout_gravity="center_horizontal"
                 android:scaleType="centerCrop"
                 android:src="@drawable/splashart_hello" />
