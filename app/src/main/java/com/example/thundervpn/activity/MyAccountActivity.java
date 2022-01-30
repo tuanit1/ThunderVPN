@@ -40,18 +40,32 @@ public class MyAccountActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         sharedPref = new SharedPref(this);
 
-        setupUI();
-    }
-
-    private void setupUI() {
-
         if(Constant.isLogged){
             binding.loggedView.setVisibility(View.VISIBLE);
             binding.nologgedView.setVisibility(View.GONE);
+
+            LoadUser();
+            setupUI();
+
         }else{
             binding.loggedView.setVisibility(View.GONE);
             binding.nologgedView.setVisibility(View.VISIBLE);
+
+            binding.btnLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(MyAccountActivity.this, LoginActivity.class));
+                }
+            });
         }
+    }
+
+    private void LoadUser(){
+        String uid = auth.getCurrentUser().getUid();
+    }
+
+
+    private void setupUI() {
 
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,12 +81,7 @@ public class MyAccountActivity extends AppCompatActivity {
             }
         });
 
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MyAccountActivity.this, LoginActivity.class));
-            }
-        });
+
     }
 
     private void logOut(){

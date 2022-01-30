@@ -77,9 +77,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(int id) {
 
-                        CURRENT_COUNTRY = id;
+                        if(CURRENT_COUNTRY != id){
+                            CURRENT_COUNTRY = id;
 
-                        SetProxy(true);
+                            SetProxy(true);
+                        }
+
                     }
                 });
 
@@ -104,11 +107,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 binding.mycontentview.tvCountry.setText("Default");
 
-                if(!LocalVpnService.IsRunning){
-                    binding.mycontentview.tvStatus.setText("CONNECTING...");
-                    startVpn();
-                }else{
-                    switchCountryText();
+                if(isToggle){
+                    if(!LocalVpnService.IsRunning){
+                        binding.mycontentview.tvStatus.setText("CONNECTING...");
+                        startVpn();
+                    }else{
+                        switchCountryText();
+                    }
                 }
 
             }else{
@@ -128,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onEnd(boolean status, Country country, ArrayList<MyProxy> arrayList_proxy) {
                     if(methods.isNetworkConnected()){
                         if(status){
+
                             if(!arrayList_proxy.isEmpty()){
                                 //get random proxy in list
                                 int ran_index = (int)(Math.random() * arrayList_proxy.size());
