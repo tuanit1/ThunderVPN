@@ -153,7 +153,7 @@ public class MyAccountActivity extends AppCompatActivity {
                 binding.tvType.setTypeface(binding.tvType.getTypeface(), Typeface.BOLD);
                 binding.llExpired.setVisibility(View.VISIBLE);
 
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm, MMMM dd, yyyy");
+                SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
                 binding.tvExpired.setText(sdf.format(mUser.getExpired_date()));
                 binding.tvPremium.setText("Buy more");
 

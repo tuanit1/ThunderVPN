@@ -156,6 +156,8 @@ public class LoginActivity extends AppCompatActivity {
                             sharedPref.setRemember(binding.ckbRemember.isChecked());
                             sharedPref.setIsAutoLogin(true);
 
+                            Toast.makeText(LoginActivity.this, "You logged in!", Toast.LENGTH_SHORT).show();
+
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }else{
                             auth.getCurrentUser().sendEmailVerification();
@@ -220,6 +222,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                                     Bundle bundle = new Bundle();
                                                     bundle.putString("uid", uid);
+                                                    bundle.putString("email", email);
                                                     bundle.putString("name", name);
                                                     bundle.putString("date", date);
 

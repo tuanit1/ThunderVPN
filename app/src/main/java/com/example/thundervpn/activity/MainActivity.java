@@ -3,8 +3,12 @@ package com.example.thundervpn.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.VpnService;
 import android.os.Bundle;
@@ -14,8 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.thundervpn.asynctasks.GetUserAsync;
 import com.example.thundervpn.items.MyUser;
+import com.example.thundervpn.listeners.GetUserListener;
 import com.example.thundervpn.utils.SharedPref;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.example.thundervpn.R;
 import com.example.thundervpn.asynctasks.GetAllCountryAsync;
@@ -34,6 +42,7 @@ import com.example.thundervpn.utils.Methods;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
@@ -46,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ArrayList<Country> mCountries;
     public static final int REQUEST_PROXY = 1;
     private int CURRENT_COUNTRY;
+    private int notificationId = 11;
+    private Notification notification;
+    private NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         methods = new Methods(this);
         sharedPref = new SharedPref(this);
         mCountries = new ArrayList<>();
+        notificationManager = NotificationManagerCompat.from(this);
+
+        setupNotification();
 
         setupDrawer();
 
@@ -67,6 +82,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setLastCountry();
 
         LocalVpnService.addOnStatusChangedListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(Constant.isLogged){
+            GetUserState();
+        }
+    }
+
+    private void GetUserState(){
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Bundle bundle = new Bundle();
+        bundle.putString("uid", uid);
+
+        GetUserAsync async = new GetUserAsync(methods.getRequestBody("method_get_user", bundle), methods, new GetUserListener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onEnd(boolean status, MyUser user) {
+                if(methods.isNetworkConnected()){
+                    if(status){
+                        Constant.IS_PREMIUM = user.getExpired_date().after(new Date());
+                    }
+                }
+            }
+        });
+
+        async.execute();
+    }
+
+    private void setupNotification(){
+        //tap action
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);;
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        //init notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constant.NOTI_CHANNEL)
+                .setSmallIcon(R.drawable.ic_app)
+                .setContentTitle("Your internet is private now.")
+                .setContentText("Tap to change your settings.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(false);
+
+        notification = builder.build();
+        notification.flags |= Notification.FLAG_NO_CLEAR;
     }
 
     private void setupMoreCountryButton() {
@@ -93,33 +161,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private void setDefaultProxy(boolean isToggle){
+        if(methods.isNetworkConnected()){
+            MyProxy proxy = methods.getDefaultProxy();
+            ProxyConfig.Instance.setProxy(proxy.getHost(), proxy.getPort(), proxy.getUsername(), proxy.getPassword());
+            sharedPref.setCurrentCountry(0);
+            Log.e("VPN", "Change to: " + proxy.getHost() + ":" + proxy.getPort());
+
+            Picasso.get()
+                    .load(R.drawable.global)
+                    .error(R.drawable.global)
+                    .into(binding.mycontentview.ivCountry);
+
+            binding.mycontentview.tvCountry.setText("Default");
+
+            if(isToggle){
+                if(!LocalVpnService.IsRunning){
+                    binding.mycontentview.tvStatus.setText("CONNECTING...");
+                    startVpn();
+                }else{
+                    switchCountryText();
+                }
+            }
+
+        }else{
+            Toast.makeText(MainActivity.this, Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void SetProxy(boolean isToggle) {
         if(CURRENT_COUNTRY == 0){
-            if(methods.isNetworkConnected()){
-                MyProxy proxy = methods.getDefaultProxy();
-                ProxyConfig.Instance.setProxy(proxy.getHost(), proxy.getPort(), proxy.getUsername(), proxy.getPassword());
-                sharedPref.setCurrentCountry(0);
-                Log.e("VPN", "Change to: " + proxy.getHost() + ":" + proxy.getPort());
-
-                Picasso.get()
-                        .load(R.drawable.global)
-                        .error(R.drawable.global)
-                        .into(binding.mycontentview.ivCountry);
-
-                binding.mycontentview.tvCountry.setText("Default");
-
-                if(isToggle){
-                    if(!LocalVpnService.IsRunning){
-                        binding.mycontentview.tvStatus.setText("CONNECTING...");
-                        startVpn();
-                    }else{
-                        switchCountryText();
-                    }
-                }
-
-            }else{
-                Toast.makeText(MainActivity.this, Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
-            }
+            setDefaultProxy(isToggle);
         }else{
             Bundle bundle = new Bundle();
             bundle.putInt("id", CURRENT_COUNTRY);
@@ -127,6 +199,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             GetCountryProxyAsync async = new GetCountryProxyAsync(methods, methods.getRequestBody("method_get_proxy", bundle), new GetCountryProxyListener() {
                 @Override
                 public void onStart() {
+
+                    if(isToggle){
+                        binding.mycontentview.tvStatus.setText("REDIRECTING...");
+                    }
 
                 }
 
@@ -167,11 +243,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
                         }else{
-                            Toast.makeText(MainActivity.this, Constant.ERROR_MSG, Toast.LENGTH_SHORT).show();
+                            setDefaultProxy(isToggle);
                         }
                     }else{
                         Toast.makeText(MainActivity.this, Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
                     }
+
                 }
             });
 
@@ -217,8 +294,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    private void ShowVpnNotification(){
+        notificationManager.notify(notificationId, notification);
+    }
+
+    private void RemoveVpnNotification(){
+        notificationManager.cancelAll();
+    }
+
     private void switchCountryText(){
-        binding.mycontentview.tvStatus.setText("SWITCHING...");
+        binding.mycontentview.tvStatus.setText("CONNECTING...");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -253,6 +338,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_unlock:
                 break;
             case R.id.nav_feedback:
+
+                startActivity(new Intent(MainActivity.this, FeedbackActivity.class));
+
                 break;
             case R.id.nav_rate:
                 break;
@@ -293,12 +381,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             binding.mycontentview.rvToggle.setBackgroundResource(R.drawable.toggle_button);
             binding.mycontentview.ivPower.setImageResource(R.drawable.power_button);
             toggle_state = true;
+            ShowVpnNotification();
         }else {
             binding.mycontentview.tvToggle.setText("START");
             binding.mycontentview.tvStatus.setText("DISCONNECTED");
             binding.mycontentview.rvToggle.setBackgroundResource(R.drawable.toggle_button_off);
             binding.mycontentview.ivPower.setImageResource(R.drawable.power_button_off);
             toggle_state = false;
+            RemoveVpnNotification();
         }
     }
 

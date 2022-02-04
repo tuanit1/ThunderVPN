@@ -27,6 +27,7 @@
         <entry key="..\:/AndroidProject/ThunderVPN/app/src/main/res/menu/activity_main_drawer.xml" value="0.3651041666666667" />
         <entry key="..\:/AndroidProject/ThunderVPN/app/src/main/res/mipmap-anydpi-v26/ic_launcher_thundervpn.xml" value="0.2203125" />
         <entry key="..\:/AndroidProject/ThunderVPN/app/src/main/res/mipmap-anydpi-v26/ic_launcher_thundervpn_round.xml" value="0.2203125" />
+        <entry key="..\:/ThunderVPN/app/src/main/res/drawable/border_txb_shape.xml" value="0.253" />
         <entry key="..\:/ThunderVPN/app/src/main/res/drawable/go_premium_shape.xml" value="0.1555" />
         <entry key="..\:/ThunderVPN/app/src/main/res/drawable/gradient_color.xml" value="0.1555" />
         <entry key="..\:/ThunderVPN/app/src/main/res/drawable/item_country_shape.xml" value="0.1555" />
@@ -36,12 +37,13 @@
         <entry key="..\:/ThunderVPN/app/src/main/res/drawable/toggle_button.xml" value="0.1555" />
         <entry key="..\:/ThunderVPN/app/src/main/res/drawable/toggle_button_off.xml" value="0.1555" />
         <entry key="..\:/ThunderVPN/app/src/main/res/layout/activity_change_password.xml" value="0.35260416666666666" />
+        <entry key="..\:/ThunderVPN/app/src/main/res/layout/activity_feedback.xml" value="0.33" />
         <entry key="..\:/ThunderVPN/app/src/main/res/layout/activity_forgot_password.xml" value="0.33" />
         <entry key="..\:/ThunderVPN/app/src/main/res/layout/activity_login.xml" value="0.36666666666666664" />
         <entry key="..\:/ThunderVPN/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
         <entry key="..\:/ThunderVPN/app/src/main/res/layout/activity_my_account.xml" value="0.4667472793228537" />
         <entry key="..\:/ThunderVPN/app/src/main/res/layout/activity_splash.xml" value="0.36666666666666664" />
-        <entry key="..\:/ThunderVPN/app/src/main/res/layout/content_main.xml" value="0.2" />
+        <entry key="..\:/ThunderVPN/app/src/main/res/layout/content_main.xml" value="0.33" />
         <entry key="..\:/ThunderVPN/app/src/main/res/layout/ic_app.xml" value="0.36666666666666664" />
         <entry key="..\:/ThunderVPN/app/src/main/res/layout/layout_bottom_register.xml" value="0.36666666666666664" />
         <entry key="..\:/ThunderVPN/app/src/main/res/layout/layout_bottom_sheet.xml" value="0.36666666666666664" />

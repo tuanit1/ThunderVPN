@@ -151,7 +151,7 @@ public class MyBottomSheetFragments extends BottomSheetDialogFragment {
             public void onEnd(boolean status, ArrayList<Country> arrayList_country) {
                 if(methods.isNetworkConnected()){
                     if(status){
-                        mCountries.add(new Country(0, "Default Country", false, "a"));
+                        mCountries.add(new Country(0, "Default", false, "a"));
                         mCountries.addAll(arrayList_country);
                         mCountries.sort(Comparator.comparing(Country::isPremium));
                     }else{

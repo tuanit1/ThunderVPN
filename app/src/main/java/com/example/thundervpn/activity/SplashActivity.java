@@ -17,7 +17,13 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.thundervpn.asynctasks.ExecuteQueryAsync;
+import com.example.thundervpn.asynctasks.GetAdminSettingsAsync;
+import com.example.thundervpn.asynctasks.GetUserAsync;
 import com.example.thundervpn.databinding.ActivitySplashBinding;
+import com.example.thundervpn.items.MyUser;
+import com.example.thundervpn.listeners.ExecuteQueryListener;
+import com.example.thundervpn.listeners.GetUserListener;
 import com.example.thundervpn.utils.Constant;
 import com.example.thundervpn.utils.Methods;
 import com.example.thundervpn.utils.SharedPref;
@@ -25,6 +31,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Date;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -45,13 +53,45 @@ public class SplashActivity extends AppCompatActivity {
         sharedPref = new SharedPref(this);
         auth = FirebaseAuth.getInstance();
 
+        LoadSetting();
+
+    }
+
+    private void checkLoginState(){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if(sharedPref.getIsAutoLogin()) {
                     if(methods.isNetworkConnected()){
-                        isAutoLogin = true;
-                        autoLogin();
+
+                        String uid = auth.getCurrentUser().getUid();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("uid", uid);
+
+                        GetUserAsync async = new GetUserAsync(methods.getRequestBody("method_get_user", bundle), methods, new GetUserListener() {
+                            @Override
+                            public void onStart() {
+
+                            }
+
+                            @Override
+                            public void onEnd(boolean status, MyUser user) {
+                                if(methods.isNetworkConnected()){
+                                    if(status){
+                                        //show openAds
+
+                                    }
+                                    isAutoLogin = true;
+                                    autoLogin();
+                                }else{
+                                    isAutoLogin = true;
+                                    autoLogin();
+                                }
+                            }
+                        });
+
+                        async.execute();
+
                     }else {
                         Toast.makeText(SplashActivity.this, Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
                         Constant.isLogged = false;
@@ -63,8 +103,7 @@ public class SplashActivity extends AppCompatActivity {
                     openMainActivity();
                 }
             }
-        }, 2000);
-
+        }, 500);
     }
 
     private void openMainActivity(){
@@ -97,5 +136,37 @@ public class SplashActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void LoadSetting(){
+         GetAdminSettingsAsync async = new GetAdminSettingsAsync(methods, methods.getRequestBody("method_get_settings", null), new ExecuteQueryListener() {
+             @Override
+             public void onStart() {
+
+             }
+
+             @Override
+             public void onEnd(boolean status) {
+                 if(methods.isNetworkConnected()){
+                     if(status){
+                         checkLoginState();
+                     }else{
+                         Toast.makeText(SplashActivity.this, Constant.ERROR_MSG, Toast.LENGTH_SHORT).show();
+
+                         new Handler().postDelayed(new Runnable() {
+                             @Override
+                             public void run() {
+                                 finishAffinity();
+                             }
+                         }, 1000);
+
+                     }
+                 }else{
+                     Toast.makeText(SplashActivity.this, Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
+                 }
+             }
+         });
+
+         async.execute();
     }
 }

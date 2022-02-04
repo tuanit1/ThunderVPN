@@ -4,7 +4,7 @@
     android:thickness="22dp"
     android:useLevel="false">
     <solid
-        android:color="@color/fade_color"/>
+        android:color="#5E8078"/>
 <!--    <gradient-->
 <!--        android:angle="0"-->
 <!--        android:useLevel="false"-->

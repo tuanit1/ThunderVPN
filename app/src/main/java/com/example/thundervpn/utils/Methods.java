@@ -8,6 +8,7 @@
 
 package com.example.thundervpn.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,7 +49,17 @@ public class Methods {
     }
 
     public MyProxy getDefaultProxy(){
-        return new MyProxy(0, Constant.DEFAULT_HOST, Constant.DEFAULT_PORT, Constant.DEFAULT_USNAME, Constant.DEFAULT_PSSWRD, 0);
+
+        String proxy_str = Constant.DEFAULT_PROXY;
+
+        String[] arr = proxy_str.split(":");
+
+        String hostname = arr[0];
+        int port = Integer.parseInt(arr[1]);
+        String username = arr[2];
+        String password = arr[3];
+
+        return new MyProxy(0, hostname, port, username, password, 0);
     }
 
     public boolean checkForEncode(String string) {
@@ -55,6 +67,20 @@ public class Methods {
         Pattern r = Pattern.compile(pattern);
         Matcher m = r.matcher(string);
         return m.find();
+    }
+
+    public boolean isAppRunning(final Context context) {
+        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        final List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
+        if (procInfos != null)
+        {
+            for (final ActivityManager.RunningAppProcessInfo processInfo : procInfos) {
+                if (processInfo.processName.equals(Constant.PACKAGE_NAME)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public RequestBody getRequestBody(String method_name, Bundle bundle){
@@ -66,6 +92,7 @@ public class Methods {
             case "method_signup":
                 postObj.addProperty("uid", base64Encode(bundle.getString("uid")));
                 postObj.addProperty("name", base64Encode(bundle.getString("name")));
+                postObj.addProperty("email", base64Encode(bundle.getString("email")));
                 postObj.addProperty("date", bundle.getString("date"));
                 break;
 
@@ -79,6 +106,10 @@ public class Methods {
             case "method_change_name":
                 postObj.addProperty("name", base64Encode(bundle.getString("name")));
                 postObj.addProperty("uid", base64Encode(bundle.getString("uid")));
+                break;
+            case "method_send_feedback":
+                postObj.addProperty("uid", base64Encode(bundle.getString("uid")));
+                postObj.addProperty("msg", base64Encode(bundle.getString("msg")));
                 break;
         }
 

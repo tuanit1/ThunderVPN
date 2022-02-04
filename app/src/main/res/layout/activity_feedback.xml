@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /**
+  ~  * Created by ACER on 2/3/22, 12:10 PM
+  ~  * Copyright (c) 2022 . All rights reserved.
+  ~  * Last modified 2/3/22, 12:10 PM
+  ~  */
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.FeedbackActivity">
+
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ic_back_arrow" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Feedback"
+            android:textColor="@color/main_color"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/center"
+        android:visibility="gone"
+        android:layout_width="350dp"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Say what you think about the app, so we'd satisfy your experience better."
+            android:textAlignment="center"
+            android:textSize="18dp"
+            android:layout_marginBottom="50dp"
+            android:textColor="@color/text_color"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/edt"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/border_txb_shape"
+            android:layout_height="wrap_content"
+            android:lines="6"
+            android:hint="Your comment"
+            android:text=""
+            android:textSize="18dp"
+            android:padding="15dp"
+            android:inputType="text|textMultiLine"
+            android:gravity="top"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btn_submit"
+            android:layout_width="350dp"
+            android:layout_height="65dp"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="40dp"
+            app:cardBackgroundColor="@color/main_color"
+            app:cardCornerRadius="15dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="SUBMIT"
+                    android:textColor="@color/white"
+                    android:textSize="22dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/nologged_view"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:text="You need to login first"
+                android:textColor="@color/text_color"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btn_login"
+                android:layout_width="350dp"
+                android:layout_height="65dp"
+                android:layout_above="@id/btn_signout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/main_color"
+                app:cardCornerRadius="25dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="LOGIN"
+                        android:textColor="@color/white"
+                        android:textSize="22dp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

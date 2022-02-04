@@ -23,6 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
             android:background="@drawable/go_premium_shape"
             android:elevation="10dp"
             android:orientation="horizontal"
@@ -48,32 +50,36 @@
         </LinearLayout>
     </RelativeLayout>
 
+
     <LinearLayout
-        android:layout_above="@+id/rl_toggle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/rl_toggle"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="40dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Status:"
-                android:textSize="22dp"/>
+                android:textSize="22dp" />
+
             <TextView
                 android:id="@+id/tv_status"
-                android:layout_marginLeft="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:text="DISCONNECTED"
-                android:textStyle="bold"
                 android:textColor="@color/text_color"
-                android:textSize="27dp"/>
+                android:textSize="27dp"
+                android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>
@@ -131,7 +137,9 @@
         </RelativeLayout>
     </RelativeLayout>
 
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv_country"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="80dp"
