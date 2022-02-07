@@ -8,13 +8,25 @@
 
 package com.example.thundervpn.utils;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.example.thundervpn.activity.MainActivity;
 import com.example.thundervpn.items.MyProxy;
+import com.example.thundervpn.listeners.MyListener;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.gson.JsonObject;
 
 import java.io.File;
@@ -28,6 +40,7 @@ import okhttp3.RequestBody;
 
 public class Methods {
     private Context context;
+    private InterstitialAd mInterstitialAd;
 
     public Methods(Context context) {
         this.context = context;
@@ -46,6 +59,73 @@ public class Methods {
     public String base64Decode(String input) throws UnsupportedEncodingException {
         byte[] encodeValue = Base64.decode(input, Base64.DEFAULT);
         return (new String(encodeValue, "UTF-8")).trim();
+    }
+
+    public void showInterAds(MyListener listener){
+        if(Constant.isInterAd){
+            Constant.adCount++;
+            if(Constant.adCount % Constant.adShow == 0 && !Constant.IS_PREMIUM){
+                AdRequest adRequest = new AdRequest.Builder().build();
+
+                InterstitialAd.load(context,Constant.INTER_ADS_ID, adRequest,
+                        new InterstitialAdLoadCallback() {
+                            @Override
+                            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                                // The mInterstitialAd reference will be null until
+                                // an ad is loaded.
+                                mInterstitialAd = interstitialAd;
+
+                                if(mInterstitialAd != null){
+
+                                    mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                                        @Override
+                                        public void onAdDismissedFullScreenContent() {
+                                            // Called when fullscreen content is dismissed.
+                                            listener.onClick();
+                                            Log.d("TAG", "The ad was dismissed.");
+                                        }
+
+                                        @Override
+                                        public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                            // Called when fullscreen content failed to show.
+                                            listener.onClick();
+                                            Log.d("TAG", "The ad failed to show.");
+                                        }
+
+                                        @Override
+                                        public void onAdShowedFullScreenContent() {
+                                            // Called when fullscreen content is shown.
+                                            // Make sure to set your reference to null so you don't
+                                            // show it a second time.
+                                            mInterstitialAd = null;
+                                            Log.d("TAG", "The ad was shown.");
+                                        }
+                                    });
+
+                                    mInterstitialAd.show((Activity)context);
+                                }else {
+                                    listener.onClick();
+                                }
+                                Log.i("TAG", "onAdLoaded");
+
+                            }
+
+                            @Override
+                            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                                // Handle the error
+                                Log.i("TAG", loadAdError.getMessage());
+
+                                listener.onClick();
+
+                                mInterstitialAd = null;
+                            }
+                        });
+            }else {
+                listener.onClick();
+            }
+        }else {
+            listener.onClick();
+        }
     }
 
     public MyProxy getDefaultProxy(){

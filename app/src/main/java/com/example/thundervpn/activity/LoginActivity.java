@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.example.thundervpn.asynctasks.ExecuteQueryAsync;
 import com.example.thundervpn.databinding.ActivityLoginBinding;
 import com.example.thundervpn.listeners.ExecuteQueryListener;
+import com.example.thundervpn.listeners.MyListener;
 import com.example.thundervpn.utils.Constant;
 import com.example.thundervpn.utils.LoadingDialog;
 import com.example.thundervpn.utils.Methods;
@@ -82,7 +83,13 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                methods.showInterAds(new MyListener() {
+                    @Override
+                    public void onClick() {
+                        onBackPressed();
+                    }
+                });
+
             }
         });
 
@@ -158,7 +165,13 @@ public class LoginActivity extends AppCompatActivity {
 
                             Toast.makeText(LoginActivity.this, "You logged in!", Toast.LENGTH_SHORT).show();
 
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            methods.showInterAds(new MyListener() {
+                                @Override
+                                public void onClick() {
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                }
+                            });
+
                         }else{
                             auth.getCurrentUser().sendEmailVerification();
                             Toast.makeText(LoginActivity.this, "Your email is not verified! Please verify your email!", Toast.LENGTH_SHORT).show();

@@ -24,6 +24,8 @@ import com.example.thundervpn.databinding.ActivitySplashBinding;
 import com.example.thundervpn.items.MyUser;
 import com.example.thundervpn.listeners.ExecuteQueryListener;
 import com.example.thundervpn.listeners.GetUserListener;
+import com.example.thundervpn.listeners.MyListener;
+import com.example.thundervpn.utils.AppOpenAdsManager;
 import com.example.thundervpn.utils.Constant;
 import com.example.thundervpn.utils.Methods;
 import com.example.thundervpn.utils.SharedPref;
@@ -41,6 +43,8 @@ public class SplashActivity extends AppCompatActivity {
     private Methods methods;
     private FirebaseAuth auth;
     private boolean isAutoLogin = false;
+    private boolean isShowOpenAds = true;
+    private AppOpenAdsManager appOpenAdsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,13 @@ public class SplashActivity extends AppCompatActivity {
         methods = new Methods(this);
         sharedPref = new SharedPref(this);
         auth = FirebaseAuth.getInstance();
+
+        appOpenAdsManager = new AppOpenAdsManager(this, new MyListener() {
+            @Override
+            public void onClick() {
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            }
+        });
 
         LoadSetting();
 
@@ -78,8 +89,7 @@ public class SplashActivity extends AppCompatActivity {
                             public void onEnd(boolean status, MyUser user) {
                                 if(methods.isNetworkConnected()){
                                     if(status){
-                                        //show openAds
-
+                                        isShowOpenAds = user.getExpired_date().before(new Date());
                                     }
                                     isAutoLogin = true;
                                     autoLogin();
@@ -95,15 +105,15 @@ public class SplashActivity extends AppCompatActivity {
                     }else {
                         Toast.makeText(SplashActivity.this, Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
                         Constant.isLogged = false;
-                        openMainActivity();
+                        appOpenAdsManager.showAdIfAvailable();
                     }
                 } else {
                     isAutoLogin = false;
                     Constant.isLogged = false;
-                    openMainActivity();
+                    appOpenAdsManager.showAdIfAvailable();
                 }
             }
-        }, 500);
+        }, 1200);
     }
 
     private void openMainActivity(){
@@ -120,19 +130,33 @@ public class SplashActivity extends AppCompatActivity {
                             if(auth.getCurrentUser().isEmailVerified()){
                                 Constant.isLogged = true;
                                 Constant.UID = auth.getCurrentUser().getUid();
-                                openMainActivity();
 
-                                //appOpenAdsManager.showAdIfAvailable();
+                                if(isShowOpenAds){
+                                    appOpenAdsManager.showAdIfAvailable();
+                                }else{
+                                    openMainActivity();
+                                }
+
                             }else{
                                 Toast.makeText(SplashActivity.this, "Your email is not verified! Please verify your email!", Toast.LENGTH_SHORT).show();
                                 Constant.isLogged = false;
                                 Toast.makeText(SplashActivity.this, "Unauthorized Access", Toast.LENGTH_SHORT).show();
-                                openMainActivity();
+
+                                if(isShowOpenAds){
+                                    appOpenAdsManager.showAdIfAvailable();
+                                }else{
+                                    openMainActivity();
+                                }
                             }
                         }else{
                             Constant.isLogged = false;
                             Toast.makeText(SplashActivity.this, "Unauthorized Access", Toast.LENGTH_SHORT).show();
-                            openMainActivity();
+
+                            if(isShowOpenAds){
+                                appOpenAdsManager.showAdIfAvailable();
+                            }else{
+                                openMainActivity();
+                            }
                         }
                     }
                 });
@@ -163,6 +187,13 @@ public class SplashActivity extends AppCompatActivity {
                      }
                  }else{
                      Toast.makeText(SplashActivity.this, Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
+
+                     new Handler().postDelayed(new Runnable() {
+                         @Override
+                         public void run() {
+                             finishAffinity();
+                         }
+                     }, 1000);
                  }
              }
          });

@@ -52,7 +52,7 @@ public class GetAdminSettingsAsync extends AsyncTask<Void, String, Boolean> {
             JSONObject obj = jsonArray_setting.getJSONObject(0);
 
             Constant.DEFAULT_PROXY = methods.base64Decode(obj.getString("default_proxy"));
-
+            Constant.adShow = obj.getInt("inters_ads_count");
             //more...
 
             return true;

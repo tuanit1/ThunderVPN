@@ -21,7 +21,11 @@ import android.widget.Toast;
 import com.example.thundervpn.asynctasks.GetUserAsync;
 import com.example.thundervpn.items.MyUser;
 import com.example.thundervpn.listeners.GetUserListener;
+import com.example.thundervpn.listeners.MyListener;
 import com.example.thundervpn.utils.SharedPref;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -90,7 +94,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if(Constant.isLogged){
             GetUserState();
+        }else{
+            LoadBannerAds();
         }
+    }
+
+    private void LoadBannerAds(){
+        AdRequest adRequest = new AdRequest.Builder().build();
+        binding.mycontentview.adView.loadAd(adRequest);
     }
 
     private void GetUserState(){
@@ -109,7 +120,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if(methods.isNetworkConnected()){
                     if(status){
                         Constant.IS_PREMIUM = user.getExpired_date().after(new Date());
+
+                        if(Constant.IS_PREMIUM){
+                            binding.mycontentview.adsContainer.removeView(binding.mycontentview.adView);
+                        }
+
+                    }else{
+                        LoadBannerAds();
                     }
+
                 }
             }
         });
@@ -139,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupMoreCountryButton() {
 
-        binding.mycontentview.btnMoreCountry.setOnClickListener(new View.OnClickListener() {
+        binding.mycontentview.cvCountry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MyBottomSheetFragments myBottomSheetFragments = new MyBottomSheetFragments(new ItemCountryClickListener() {
@@ -332,19 +351,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id){
             case R.id.nav_profile:
 
-                startActivity(new Intent(MainActivity.this, MyAccountActivity.class));
+                methods.showInterAds(new MyListener() {
+                    @Override
+                    public void onClick() {
+                        startActivity(new Intent(MainActivity.this, MyAccountActivity.class));
+                    }
+                });
+
+
 
                 break;
             case R.id.nav_unlock:
+
+                methods.showInterAds(new MyListener() {
+                    @Override
+                    public void onClick() {
+
+                    }
+                });
+
                 break;
             case R.id.nav_feedback:
 
-                startActivity(new Intent(MainActivity.this, FeedbackActivity.class));
+                methods.showInterAds(new MyListener() {
+                    @Override
+                    public void onClick() {
+                        startActivity(new Intent(MainActivity.this, FeedbackActivity.class));
+                    }
+                });
+
+
 
                 break;
             case R.id.nav_rate:
+                methods.showInterAds(new MyListener() {
+                    @Override
+                    public void onClick() {
+
+                    }
+                });
                 break;
             case R.id.nav_policy:
+                methods.showInterAds(new MyListener() {
+                    @Override
+                    public void onClick() {
+
+                    }
+                });
                 break;
         }
 

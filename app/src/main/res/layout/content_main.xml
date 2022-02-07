@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:id="@+id/rl_up"
@@ -140,14 +141,15 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_country"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/adsContainer"
         android:layout_width="match_parent"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
         android:layout_height="80dp"
         app:cardCornerRadius="15dp"
-        android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="15dp"
         android:elevation="15dp">
         <LinearLayout
             android:layout_width="match_parent"
@@ -209,6 +211,23 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/adsContainer">
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+        </com.google.android.gms.ads.AdView>
+    </LinearLayout>
 
 
 </RelativeLayout>

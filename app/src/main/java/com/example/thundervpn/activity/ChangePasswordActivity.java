@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.thundervpn.R;
 import com.example.thundervpn.databinding.ActivityChangePasswordBinding;
 import com.example.thundervpn.databinding.ActivityMainBinding;
+import com.example.thundervpn.listeners.MyListener;
 import com.example.thundervpn.utils.Constant;
 import com.example.thundervpn.utils.LoadingDialog;
 import com.example.thundervpn.utils.Methods;
@@ -54,7 +55,13 @@ public class ChangePasswordActivity extends AppCompatActivity {
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                methods.showInterAds(new MyListener() {
+                    @Override
+                    public void onClick() {
+                        onBackPressed();
+                    }
+                });
+
             }
         });
 

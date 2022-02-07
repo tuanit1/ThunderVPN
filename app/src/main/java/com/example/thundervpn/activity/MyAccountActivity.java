@@ -33,6 +33,7 @@ import com.example.thundervpn.databinding.ActivityMyAccountBinding;
 import com.example.thundervpn.items.MyUser;
 import com.example.thundervpn.listeners.ExecuteQueryListener;
 import com.example.thundervpn.listeners.GetUserListener;
+import com.example.thundervpn.listeners.MyListener;
 import com.example.thundervpn.utils.Constant;
 import com.example.thundervpn.utils.Methods;
 import com.example.thundervpn.utils.SharedPref;
@@ -63,14 +64,28 @@ public class MyAccountActivity extends AppCompatActivity {
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+
+                methods.showInterAds(new MyListener() {
+                    @Override
+                    public void onClick() {
+                        onBackPressed();
+                    }
+                });
+
+
             }
         });
 
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MyAccountActivity.this, LoginActivity.class));
+                methods.showInterAds(new MyListener() {
+                    @Override
+                    public void onClick() {
+                        startActivity(new Intent(MyAccountActivity.this, LoginActivity.class));
+                    }
+                });
+
             }
         });
 
@@ -173,7 +188,13 @@ public class MyAccountActivity extends AppCompatActivity {
             binding.btnChangepass.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(MyAccountActivity.this, ChangePasswordActivity.class));
+                    methods.showInterAds(new MyListener() {
+                        @Override
+                        public void onClick() {
+                            startActivity(new Intent(MyAccountActivity.this, ChangePasswordActivity.class));
+                        }
+                    });
+
                 }
             });
         }
@@ -253,6 +274,7 @@ public class MyAccountActivity extends AppCompatActivity {
 
     private void logOut(){
         auth.signOut();
+        Constant.IS_PREMIUM = false;
         Constant.isLogged = false;
         sharedPref.setIsAutoLogin(false);
 
