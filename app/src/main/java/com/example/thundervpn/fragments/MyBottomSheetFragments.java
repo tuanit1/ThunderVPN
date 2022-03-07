@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,8 +56,9 @@ public class MyBottomSheetFragments extends BottomSheetDialogFragment {
     private TextView tv_title;
     private Methods methods;
 
-    public MyBottomSheetFragments(ItemCountryClickListener listener) {
+    public MyBottomSheetFragments(ItemCountryClickListener listener, ArrayList<Country> arrayList_country) {
         this.listener = listener;
+        this.mCountries = arrayList_country;
     }
 
     @NonNull
@@ -70,7 +72,7 @@ public class MyBottomSheetFragments extends BottomSheetDialogFragment {
 
         Hook();
 
-        loadCountry();
+        setupUI();
 
         return bottomSheetDialog;
     }
@@ -137,38 +139,6 @@ public class MyBottomSheetFragments extends BottomSheetDialogFragment {
 //                }
 //            });
         }
-    }
-
-    private void loadCountry(){
-        GetAllCountryAsync async = new GetAllCountryAsync(methods.getRequestBody("method_get_allcountry", null), new GetAllCountryListener() {
-            @Override
-            public void onStart() {
-                progressBar.setVisibility(View.VISIBLE);
-                mCountries.clear();
-            }
-
-            @Override
-            public void onEnd(boolean status, ArrayList<Country> arrayList_country) {
-                if(methods.isNetworkConnected()){
-                    if(status){
-                        mCountries.add(new Country(0, "Default", false, "a"));
-                        mCountries.addAll(arrayList_country);
-                        mCountries.sort(Comparator.comparing(Country::isPremium));
-                    }else{
-                        Toast.makeText(getContext(), Constant.ERROR_MSG, Toast.LENGTH_SHORT).show();
-                    }
-
-                    progressBar.setVisibility(View.GONE);
-
-                    setupUI();
-
-                }else{
-                    Toast.makeText(getContext(), Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
-        });
-        async.execute();
     }
 
 }

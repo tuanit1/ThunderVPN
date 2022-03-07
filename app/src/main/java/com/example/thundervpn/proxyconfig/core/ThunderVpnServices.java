@@ -38,9 +38,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 //import go.lantern.Lantern;
 
-public class LocalVpnService extends VpnService implements Runnable {
+public class ThunderVpnServices extends VpnService implements Runnable {
 
-    public static LocalVpnService Instance;
+    public static ThunderVpnServices Instance;
     public static boolean IsRunning = false;
 
     private final String device = android.os.Build.DEVICE;
@@ -67,7 +67,7 @@ public class LocalVpnService extends VpnService implements Runnable {
     private long m_ReceivedBytes;
     private String[] m_Blacklist;
 
-    public LocalVpnService() {
+    public ThunderVpnServices() {
         ID++;
         m_Handler = new Handler();
         m_Packet = new byte[20000];

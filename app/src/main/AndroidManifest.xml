@@ -48,7 +48,7 @@
             android:value="ca-app-pub-3940256099942544~3347511713"/>
 
         <service
-            android:name=".proxyconfig.core.LocalVpnService"
+            android:name=".proxyconfig.core.ThunderVpnServices"
             android:exported="false"
             android:permission="android.permission.BIND_VPN_SERVICE">
             <intent-filter>

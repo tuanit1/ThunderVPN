@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -27,7 +28,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.example.thundervpn.R;
 import com.example.thundervpn.asynctasks.GetAllCountryAsync;
@@ -38,7 +38,7 @@ import com.example.thundervpn.items.MyProxy;
 import com.example.thundervpn.listeners.GetAllCountryListener;
 import com.example.thundervpn.listeners.GetCountryProxyListener;
 import com.example.thundervpn.listeners.ItemCountryClickListener;
-import com.example.thundervpn.proxyconfig.core.LocalVpnService;
+import com.example.thundervpn.proxyconfig.core.ThunderVpnServices;
 import com.example.thundervpn.proxyconfig.core.ProxyConfig;
 import com.example.thundervpn.databinding.ActivityMainBinding;
 import com.example.thundervpn.utils.Constant;
@@ -46,11 +46,11 @@ import com.example.thundervpn.utils.Methods;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-                LocalVpnService.onStatusChangedListener{
+                ThunderVpnServices.onStatusChangedListener{
 
     private ActivityMainBinding binding;
     private boolean toggle_state = false;
@@ -81,11 +81,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setupToggleButton();
 
-        setupMoreCountryButton();
+        LoadCountry();
 
         setLastCountry();
 
-        LocalVpnService.addOnStatusChangedListener(this);
+        ThunderVpnServices.addOnStatusChangedListener(this);
     }
 
     @Override
@@ -172,12 +172,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
 
                     }
-                });
+                }, mCountries);
 
                 myBottomSheetFragments.show(getSupportFragmentManager(), myBottomSheetFragments.getTag());
             }
         });
 
+    }
+
+    private void LoadCountry(){
+        GetAllCountryAsync async = new GetAllCountryAsync(methods.getRequestBody("method_get_allcountry", null), new GetAllCountryListener() {
+            @Override
+            public void onStart() {
+                mCountries.clear();
+            }
+
+            @Override
+            public void onEnd(boolean status, ArrayList<Country> arrayList_country) {
+                if(methods.isNetworkConnected()){
+                    if(status){
+                        mCountries.add(new Country(0, "Default", false, "a"));
+                        mCountries.addAll(arrayList_country);
+                        mCountries.sort(Comparator.comparing(Country::isPremium));
+                    }else{
+                        Toast.makeText(getApplicationContext(), Constant.ERROR_MSG, Toast.LENGTH_SHORT).show();
+                    }
+
+//                    progressBar.setVisibility(View.GONE);
+//
+//                    setupUI();
+
+                }else{
+//                    Toast.makeText(getContext(), Constant.ERROR_INTERNET, Toast.LENGTH_SHORT).show();
+//                    progressBar.setVisibility(View.GONE);
+                }
+
+                setupMoreCountryButton();
+
+            }
+        });
+        async.execute();
     }
 
     private void setDefaultProxy(boolean isToggle){
@@ -195,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             binding.mycontentview.tvCountry.setText("Default");
 
             if(isToggle){
-                if(!LocalVpnService.IsRunning){
+                if(!ThunderVpnServices.IsRunning){
                     binding.mycontentview.tvStatus.setText("CONNECTING...");
                     startVpn();
                 }else{
@@ -252,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             binding.mycontentview.tvCountry.setText(country.getName());
 
                             if(isToggle){
-                                if(!LocalVpnService.IsRunning){
+                                if(!ThunderVpnServices.IsRunning){
                                     binding.mycontentview.tvStatus.setText("CONNECTING...");
                                     startVpn();
                                 }else{
@@ -283,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupToggleButton() {
 
-        toggle_state = LocalVpnService.IsRunning;
+        toggle_state = ThunderVpnServices.IsRunning;
 
         if(!toggle_state){
             binding.mycontentview.tvToggle.setText("START");
@@ -307,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
 
                 }else {
-                    LocalVpnService.IsRunning = false;
+                    ThunderVpnServices.IsRunning = false;
                 }
             }
         });
@@ -422,7 +456,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
         if (requestCode == REQUEST_PROXY) {
-            startService(new Intent(this, LocalVpnService.class));
+            startService(new Intent(this, ThunderVpnServices.class));
         }
     }
 
@@ -464,7 +498,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onDestroy() {
-        LocalVpnService.removeOnStatusChangedListener(this);
+        ThunderVpnServices.removeOnStatusChangedListener(this);
         super.onDestroy();
     }
 }

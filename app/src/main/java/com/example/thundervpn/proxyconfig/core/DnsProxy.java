@@ -161,7 +161,7 @@ public class DnsProxy implements Runnable {
             udpHeader.setDestinationPort(state.ClientPort);
             udpHeader.setTotalLength(8 + dnsPacket.Size);
 
-            LocalVpnService.Instance.sendUDPPacket(ipHeader, udpHeader);
+            ThunderVpnServices.Instance.sendUDPPacket(ipHeader, udpHeader);
         }
     }
 
@@ -198,7 +198,7 @@ public class DnsProxy implements Runnable {
                 udpHeader.setSourcePort(udpHeader.getDestinationPort());
                 udpHeader.setDestinationPort(sourcePort);
                 udpHeader.setTotalLength(8 + dnsPacket.Size);
-                LocalVpnService.Instance.sendUDPPacket(ipHeader, udpHeader);
+                ThunderVpnServices.Instance.sendUDPPacket(ipHeader, udpHeader);
                 return true;
             }
         }
@@ -238,7 +238,7 @@ public class DnsProxy implements Runnable {
             packet.setSocketAddress(remoteAddress);
 
             try {
-                if (LocalVpnService.Instance.protect(m_Client)) {
+                if (ThunderVpnServices.Instance.protect(m_Client)) {
                     m_Client.send(packet);
                 } else {
                     Log.e(Constant.TAG, "VPN protect udp socket failed.");

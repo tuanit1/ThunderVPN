@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.example.thundervpn.utils.Constant;
-import com.example.thundervpn.proxyconfig.core.LocalVpnService;
+import com.example.thundervpn.proxyconfig.core.ThunderVpnServices;
 import com.example.thundervpn.proxyconfig.core.ProxyConfig;
 
 import java.io.IOException;
@@ -53,7 +53,7 @@ public abstract class Tunnel {
     }
 
     public void connect(InetSocketAddress destAddress) throws Exception {
-        if (LocalVpnService.Instance.protect(m_InnerChannel.socket())) {
+        if (ThunderVpnServices.Instance.protect(m_InnerChannel.socket())) {
             m_DestAddress = destAddress;
             m_InnerChannel.register(m_Selector, SelectionKey.OP_CONNECT, this);
             m_InnerChannel.connect(m_ServerEP);
@@ -106,11 +106,11 @@ public abstract class Tunnel {
             if (m_InnerChannel.finishConnect()) {
                 onConnected(ByteBuffer.allocate(2048));
             } else {
-                LocalVpnService.Instance.writeLog("Error: connect to %s failed.", m_ServerEP);
+                ThunderVpnServices.Instance.writeLog("Error: connect to %s failed.", m_ServerEP);
                 this.dispose();
             }
         } catch (Exception e) {
-            LocalVpnService.Instance.writeLog("Error: connect to %s failed: %s", m_ServerEP, e);
+            ThunderVpnServices.Instance.writeLog("Error: connect to %s failed: %s", m_ServerEP, e);
             this.dispose();
         }
     }

@@ -27,7 +27,7 @@ public class HttpHostHeaderParser {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LocalVpnService.Instance.writeLog("Error: parseHost:%s", e);
+            ThunderVpnServices.Instance.writeLog("Error: parseHost:%s", e);
         }
         return null;
     }
